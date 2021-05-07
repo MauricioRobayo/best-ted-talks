@@ -1,12 +1,12 @@
-import { htmlUnescape } from "escape-goat";
 import {
   createAsyncThunk,
-  createSlice,
   createEntityAdapter,
+  createSlice,
 } from "@reduxjs/toolkit";
+import { htmlUnescape } from "escape-goat";
 import { RootState } from "../../app/store";
-import { fetchTedTopVideos, fetchVideoInfo, Thumbnail } from "./videosAPI";
 import { FilterType } from "../filters/filtersSlice";
+import { fetchTedTopVideos, fetchVideoInfo, Thumbnail } from "./videosAPI";
 
 export interface IVideo {
   commentCount: number;

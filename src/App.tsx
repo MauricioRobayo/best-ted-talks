@@ -1,11 +1,11 @@
 import React from "react";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import styled from "styled-components";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import GlobalStyle from "./globalStyles";
 import { Normalize } from "styled-normalize";
-import VideosList from "./features/videos/VideosList";
 import Video from "./features/videos/Video";
+import VideosList from "./features/videos/VideosList";
+import GlobalStyle from "./globalStyles";
 
 const Header = styled.header`
   text-align: center;

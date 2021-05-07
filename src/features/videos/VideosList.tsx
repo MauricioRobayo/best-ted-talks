@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
+import Loader from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVideos, selectStatus, selectVideos } from "./videosSlice";
-import VideoCard from "./VideoCard";
 import styled from "styled-components";
 import {
   FilterType,
@@ -9,7 +8,8 @@ import {
   selectFilters,
   updateFilter,
 } from "../filters/filtersSlice";
-import Loader from "react-loader-spinner";
+import VideoCard from "./VideoCard";
+import { fetchVideos, selectStatus, selectVideos } from "./videosSlice";
 
 const VideosWrapper = styled.div`
   display: grid;
