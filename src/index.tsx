@@ -4,9 +4,6 @@ import App from "./App";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
-import { fetchVideos } from "./features/videos/videosSlice";
-
-store.dispatch(fetchVideos());
 
 ReactDOM.render(
   <React.StrictMode>

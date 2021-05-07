@@ -6,8 +6,9 @@ import {
 } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { fetchTedTopVideos, fetchVideoInfo, Thumbnail } from "./videosAPI";
+import { FilterType } from "../filters/filtersSlice";
 
-export interface Video {
+export interface IVideo {
   commentCount: number;
   description: string;
   dislikeCount: number;
@@ -21,42 +22,41 @@ export interface Video {
   viewCount: number;
 }
 
-const videosAdapter = createEntityAdapter<Video>();
+const videosAdapter = createEntityAdapter<IVideo>({});
 
-const initialState = videosAdapter.getInitialState({
-  status: "idle",
-});
-
-export const fetchVideos = createAsyncThunk("videos/fetchVideos", async () => {
-  try {
-    const videos = await fetchTedTopVideos();
-    const ids = videos.items.map(({ id: { videoId } }) => videoId);
-    const videosInfo = await fetchVideoInfo(ids);
-    return videosInfo.items.map(
-      ({ id, snippet, statistics, contentDetails }) => {
-        return {
-          id,
-          title: htmlUnescape(snippet.title),
-          description: snippet.description,
-          thumbnail: snippet.thumbnails.default,
-          publishedAt: snippet.publishedAt,
-          viewCount: statistics.viewCount,
-          likeCount: statistics.likeCount,
-          dislikeCount: statistics.dislikeCount,
-          commentCount: statistics.commentCount,
-          duration: contentDetails.duration,
-        };
-      }
-    );
-  } catch (e) {
-    console.log(e);
+export const fetchVideos = createAsyncThunk(
+  "videos/fetchVideos",
+  async (order: FilterType) => {
+    try {
+      const videos = await fetchTedTopVideos(order);
+      const ids = videos.items.map(({ id: { videoId } }) => videoId);
+      const videosInfo = await fetchVideoInfo(ids);
+      return videosInfo.items.map(
+        ({ id, snippet, statistics, contentDetails }) => {
+          return {
+            id,
+            title: htmlUnescape(snippet.title),
+            description: snippet.description,
+            thumbnail: snippet.thumbnails.default,
+            publishedAt: snippet.publishedAt,
+            viewCount: statistics.viewCount,
+            likeCount: statistics.likeCount,
+            dislikeCount: statistics.dislikeCount,
+            commentCount: statistics.commentCount,
+            duration: contentDetails.duration,
+          };
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    return {};
   }
-  return {};
-});
+);
 
-export const counterSlice = createSlice({
+export const videosSlice = createSlice({
   name: "videos",
-  initialState,
+  initialState: videosAdapter.getInitialState({ status: "idle" }),
   reducers: {
     videosLoading(state) {
       state.status = "loading";
@@ -74,11 +74,12 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { selectAll: selectVideos } = videosAdapter.getSelectors(
-  (state: RootState) => state.videos
-);
+export const {
+  selectAll: selectVideos,
+  selectById: selectVideoById,
+} = videosAdapter.getSelectors((state: RootState) => state.videos);
 export const selectStatus = (state: RootState) => state.videos.status;
 
-export const { videosLoading } = counterSlice.actions;
+export const { videosLoading } = videosSlice.actions;
 
-export default counterSlice.reducer;
+export default videosSlice.reducer;

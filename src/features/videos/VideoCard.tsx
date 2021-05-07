@@ -1,7 +1,8 @@
 import React from "react";
-import { Video } from "./videosSlice";
+import { IVideo } from "./videosSlice";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
-import styled from "styled-components";
+import { formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 
 const VideoCard = ({
   commentCount,
@@ -13,21 +14,24 @@ const VideoCard = ({
   title,
   viewCount,
   duration,
-}: Video) => {
+}: IVideo) => {
   const formattedDuration = duration
     .replace(/[pts]/gi, "")
     .split(/[hm]/i)
     .map((part) => part.padStart(2, "0"))
     .join(":");
+  const publishedDate = new Date(publishedAt);
+  const distanceToNow = formatDistanceToNow(publishedDate);
+  const videoPath = `/t/${id}`;
 
   return (
     <article>
-      <a href={`https://www.youtube.com/watch?v=${id}`}>
+      <Link to={videoPath}>
         <img alt={title} src={thumbnail.url} title={title} />
-      </a>
+      </Link>
       <footer>
-        <div>publishedAt {publishedAt}</div>
-        <a href={`https://www.youtube.com/watch?v=${id}`}>{title}</a>
+        <div>{distanceToNow}</div>
+        <Link to={videoPath}>{title}</Link>
         <div>
           <FiThumbsUp /> {likeCount}
         </div>
