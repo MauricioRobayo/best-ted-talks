@@ -6,14 +6,14 @@ import {
 import { htmlUnescape } from "escape-goat";
 import { RootState } from "../../app/store";
 import { FilterType } from "../filters/filtersSlice";
-import { fetchTedTopVideos, fetchVideoInfo, Thumbnail } from "./videosAPI";
+import { fetchTedTopVideos, fetchVideoInfo } from "./videosAPI";
+import { Thumbnail } from "../youtubeAPI";
 
 export interface IVideo {
   commentCount: number;
   description: string;
   dislikeCount: number;
   duration: string;
-  favoriteCount: number;
   id: string;
   likeCount: number;
   publishedAt: string;
@@ -23,77 +23,75 @@ export interface IVideo {
   channelId: string;
 }
 
+interface IInitialState {
+  status: "idle" | "loading" | "resolved" | "rejected";
+}
+
 const videosAdapter = createEntityAdapter<IVideo>({});
 
-const channels = {
-  TEDtalksDirector: "UCAuUUnT6oDeKwE6v1NGQxug",
-  TEDxTalks: "UCsT0YIqwnpJCM-mx7-gSA4Q",
-  TEDEducation: "UCsooa4yRKGN_zEE8iknghZA",
-};
-
-export const fetchVideos = createAsyncThunk(
-  "videos/fetchVideos",
-  async (order: FilterType) => {
-    try {
-      const channelsVideos = await Promise.all(
-        Object.values(channels).map((channelId) =>
-          fetchTedTopVideos({ order, channelId, maxResults: 10 })
-        )
-      );
-
-      const ids = channelsVideos
-        .map((videos) => videos.items.map(({ id: { videoId } }) => videoId))
-        .flat();
-
-      const batchSize = 50;
-      const idsBatches: string[][] = [];
-      let idsBatch: string[] = [];
-      ids.forEach((id) => {
-        idsBatch.push(id);
-        if (idsBatch.length === batchSize) {
-          idsBatches.push(idsBatch);
-          idsBatch = [];
-        }
-      });
-
-      if (idsBatch.length !== 0) {
-        idsBatches.push(idsBatch);
-      }
-
-      const videosInfoInBatches = await Promise.all(
-        idsBatches.map((ids) => fetchVideoInfo(ids))
-      );
-      return videosInfoInBatches
-        .map((videosInfoInBatch) =>
-          videosInfoInBatch.items.map(
-            ({ id, snippet, statistics, contentDetails }) => {
-              return {
-                id,
-                title: htmlUnescape(snippet.title),
-                channelId: snippet.channelId,
-                description: snippet.description,
-                thumbnail: snippet.thumbnails.default,
-                publishedAt: snippet.publishedAt,
-                viewCount: statistics.viewCount,
-                likeCount: statistics.likeCount,
-                dislikeCount: statistics.dislikeCount,
-                commentCount: statistics.commentCount,
-                duration: contentDetails.duration,
-              };
-            }
-          )
-        )
-        .flat();
-    } catch (e) {
-      console.log(e);
-    }
-    return {};
+export const fetchVideos = createAsyncThunk<
+  IVideo[],
+  {
+    order: FilterType;
+    channelsIds: string[];
   }
-);
+>("videos/fetchVideos", async ({ order, channelsIds }) => {
+  const channelsVideos = await Promise.all(
+    channelsIds.map((channelId) =>
+      fetchTedTopVideos({ order, channelId, maxResults: 10 })
+    )
+  );
+
+  const ids = channelsVideos
+    .map((videos) => videos.items.map(({ id: { videoId } }) => videoId))
+    .flat();
+
+  const batchSize = 50;
+  const idsBatches: string[][] = [];
+  let idsBatch: string[] = [];
+  ids.forEach((id) => {
+    idsBatch.push(id);
+    if (idsBatch.length === batchSize) {
+      idsBatches.push(idsBatch);
+      idsBatch = [];
+    }
+  });
+
+  if (idsBatch.length !== 0) {
+    idsBatches.push(idsBatch);
+  }
+
+  const videosInfoInBatches = await Promise.all(
+    idsBatches.map((ids) => fetchVideoInfo(ids))
+  );
+  return videosInfoInBatches
+    .map((videosInfoInBatch) =>
+      videosInfoInBatch.items.map(
+        ({ id, snippet, statistics, contentDetails }) => {
+          return {
+            id,
+            title: htmlUnescape(snippet.title),
+            channelId: snippet.channelId,
+            description: snippet.description,
+            thumbnail: snippet.thumbnails.default,
+            publishedAt: snippet.publishedAt,
+            viewCount: Number(statistics.viewCount),
+            likeCount: Number(statistics.likeCount),
+            dislikeCount: Number(statistics.dislikeCount),
+            commentCount: Number(statistics.commentCount),
+            duration: contentDetails.duration,
+          };
+        }
+      )
+    )
+    .flat();
+});
 
 export const videosSlice = createSlice({
   name: "videos",
-  initialState: videosAdapter.getInitialState({ status: "idle", channels }),
+  initialState: videosAdapter.getInitialState<IInitialState>({
+    status: "idle",
+  }),
   reducers: {
     videosLoading(state) {
       state.status = "loading";
@@ -115,9 +113,6 @@ export const {
   selectAll: selectVideos,
   selectById: selectVideoById,
 } = videosAdapter.getSelectors((state: RootState) => state.videos);
-export const selectStatus = (state: RootState) => state.videos.status;
-export const selectChannels = (state: RootState) => state.videos.channels;
-
-export const { videosLoading } = videosSlice.actions;
+export const selectVideosStatus = (state: RootState) => state.videos.status;
 
 export default videosSlice.reducer;

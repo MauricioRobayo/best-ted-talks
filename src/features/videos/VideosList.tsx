@@ -9,12 +9,12 @@ import {
   updateFilter,
 } from "../filters/filtersSlice";
 import VideoCard from "./VideoCard";
+import { fetchVideos, selectVideosStatus, selectVideos } from "./videosSlice";
 import {
-  fetchVideos,
+  fetchChannels,
   selectChannels,
-  selectStatus,
-  selectVideos,
-} from "./videosSlice";
+  selectChannelsStatus,
+} from "../channels/channelsSlice";
 
 const VideosWrapper = styled.div`
   display: grid;
@@ -22,17 +22,28 @@ const VideosWrapper = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 `;
 
+const channelsIds = [
+  "UCAuUUnT6oDeKwE6v1NGQxug", // TEDtalksDirector
+  "UCsT0YIqwnpJCM-mx7-gSA4Q", // TEDxTalks
+  "UCsooa4yRKGN_zEE8iknghZA", // TEDEducation
+];
+
 const VideosList = () => {
   const videos = useSelector(selectVideos);
-  const status = useSelector(selectStatus);
+  const videosStatus = useSelector(selectVideosStatus);
+  const channelsStatus = useSelector(selectChannelsStatus);
   const filters = useSelector(selectFilters);
   const activeFilter = useSelector(selectActiveFilter);
   const channels = useSelector(selectChannels);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchVideos(activeFilter));
+    dispatch(fetchVideos({ order: activeFilter, channelsIds }));
   }, [dispatch, activeFilter]);
+
+  useEffect(() => {
+    dispatch(fetchChannels(channelsIds));
+  }, [dispatch]);
 
   const setFilter = (filter: FilterType) => {
     dispatch(updateFilter(filter));
@@ -48,7 +59,7 @@ const VideosList = () => {
         ))}
       </nav>
       <div>
-        {status === "loading" ? (
+        {videosStatus === "loading" || channelsStatus === "loading" ? (
           <Loader
             type="Grid"
             color="#E62B1E"
@@ -57,13 +68,13 @@ const VideosList = () => {
             timeout={3000} //3 secs
           />
         ) : (
-          Object.entries(channels).map(([channelName, channelId]) => {
+          channels.map(({ title, id }) => {
             return (
-              <section key={channelId}>
-                <h2>{channelName}</h2>
+              <section key={id}>
+                <h2>{title}</h2>
                 <VideosWrapper>
                   {videos
-                    .filter((video) => video.channelId === channelId)
+                    .filter(({ channelId }) => channelId === id)
                     .map((video) => (
                       <VideoCard key={video.id} {...video} />
                     ))}
