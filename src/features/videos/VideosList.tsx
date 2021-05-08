@@ -9,7 +9,12 @@ import {
   updateFilter,
 } from "../filters/filtersSlice";
 import VideoCard from "./VideoCard";
-import { fetchVideos, selectStatus, selectVideos } from "./videosSlice";
+import {
+  fetchVideos,
+  selectChannels,
+  selectStatus,
+  selectVideos,
+} from "./videosSlice";
 
 const VideosWrapper = styled.div`
   display: grid;
@@ -22,6 +27,7 @@ const VideosList = () => {
   const status = useSelector(selectStatus);
   const filters = useSelector(selectFilters);
   const activeFilter = useSelector(selectActiveFilter);
+  const channels = useSelector(selectChannels);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,7 +47,7 @@ const VideosList = () => {
           </button>
         ))}
       </nav>
-      <VideosWrapper>
+      <div>
         {status === "loading" ? (
           <Loader
             type="Grid"
@@ -51,9 +57,22 @@ const VideosList = () => {
             timeout={3000} //3 secs
           />
         ) : (
-          videos.map((video) => <VideoCard key={video.id} {...video} />)
+          Object.entries(channels).map(([channelName, channelId]) => {
+            return (
+              <section key={channelId}>
+                <h2>{channelName}</h2>
+                <VideosWrapper>
+                  {videos
+                    .filter((video) => video.channelId === channelId)
+                    .map((video) => (
+                      <VideoCard key={video.id} {...video} />
+                    ))}
+                </VideosWrapper>
+              </section>
+            );
+          })
         )}
-      </VideosWrapper>
+      </div>
     </>
   );
 };

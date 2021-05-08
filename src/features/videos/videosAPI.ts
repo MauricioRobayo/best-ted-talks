@@ -2,7 +2,6 @@ import { FilterType } from "../filters/filtersSlice";
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3";
 const API_KEY = "AIzaSyA0-OJjMtSqUqT_WgpOKf5bCyHIQUfQqDI";
-const CHANNEL_ID = "UCAuUUnT6oDeKwE6v1NGQxug";
 
 export type Thumbnail = {
   url: string;
@@ -28,6 +27,7 @@ type VideoResult = {
     publishedAt: string;
     title: string;
     description: string;
+    channelId: string;
     thumbnails: {
       default: Thumbnail;
     };
@@ -37,16 +37,22 @@ type VideoResult = {
   };
 };
 
-export const fetchTedTopVideos = async (
-  order: FilterType
-): Promise<{
+export const fetchTedTopVideos = async ({
+  order,
+  channelId,
+  maxResults,
+}: {
+  order: FilterType;
+  channelId: string;
+  maxResults: number;
+}): Promise<{
   items: SearchResult[];
 }> => {
   const endpoint = "search";
   const query = {
-    channelId: CHANNEL_ID,
+    channelId,
     key: API_KEY,
-    maxResults: "50",
+    maxResults: String(maxResults),
     order,
     part: "id",
     type: "video",
