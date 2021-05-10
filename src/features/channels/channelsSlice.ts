@@ -15,7 +15,7 @@ export interface IChannel {
   title: string;
   id: string;
   description: string;
-  customUrl?: string;
+  customUrl: string;
   thumbnail: Thumbnail;
 }
 
