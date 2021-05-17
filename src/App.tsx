@@ -8,7 +8,6 @@ import { channelsIds } from "./config";
 import ChannelsList from "./features/channels/ChannelsList";
 import { fetchChannels } from "./features/channels/channelsSlice";
 import {
-  filters,
   selectActiveFilter,
   selectFilters,
 } from "./features/filters/filtersSlice";
