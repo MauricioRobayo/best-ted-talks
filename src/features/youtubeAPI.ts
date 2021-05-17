@@ -43,16 +43,10 @@ export const fetchYouTube = async (
     key: API_KEY,
     ...query,
   });
+  const result = await fetch(`${BASE_URL}/${endpoint}?${searchParams}`);
+  if (!result.ok) {
+    throw new Error(result.statusText);
+  }
 
-  console.log({ searchParams, endpoint });
-
-  return new Promise((resolve) =>
-    setTimeout(
-      () =>
-        resolve({
-          hello: "world",
-        }),
-      2000
-    )
-  );
+  return result.json();
 };
