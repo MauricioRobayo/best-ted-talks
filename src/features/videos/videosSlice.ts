@@ -73,7 +73,7 @@ export const fetchVideos = createAsyncThunk<
             title: htmlUnescape(snippet.title),
             channelId: snippet.channelId,
             description: snippet.description,
-            thumbnail: snippet.thumbnails.default,
+            thumbnail: snippet.thumbnails.medium,
             publishedAt: snippet.publishedAt,
             viewCount: Number(statistics.viewCount),
             likeCount: Number(statistics.likeCount),
@@ -109,10 +109,8 @@ export const videosSlice = createSlice({
   },
 });
 
-export const {
-  selectAll: selectVideos,
-  selectById: selectVideoById,
-} = videosAdapter.getSelectors((state: RootState) => state.videos);
+export const { selectAll: selectVideos, selectById: selectVideoById } =
+  videosAdapter.getSelectors((state: RootState) => state.videos);
 export const selectVideosStatus = (state: RootState) => state.videos.status;
 
 export default videosSlice.reducer;

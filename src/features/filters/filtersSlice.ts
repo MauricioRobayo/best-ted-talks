@@ -2,6 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
 export const filters = ["rating", "viewCount", "date"] as const;
+export const filtersNames = {
+  rating: "Best rated",
+  viewCount: "Most viewed",
+  date: "Most recent",
+};
 export type FilterType = typeof filters[number];
 
 export type IInitialState = {
@@ -10,7 +15,7 @@ export type IInitialState = {
 };
 
 const initialState: IInitialState = {
-  activeFilter: "viewCount",
+  activeFilter: "rating",
   filters,
 };
 

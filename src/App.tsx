@@ -8,15 +8,61 @@ import { channelsIds } from "./config";
 import ChannelsList from "./features/channels/ChannelsList";
 import { fetchChannels } from "./features/channels/channelsSlice";
 import {
+  filtersNames,
   selectActiveFilter,
   selectFilters,
+  updateFilter,
 } from "./features/filters/filtersSlice";
 import Video from "./features/videos/Video";
 import { fetchVideos } from "./features/videos/videosSlice";
 import GlobalStyle from "./globalStyles";
+import { ThemeProvider } from "styled-components";
+import defaultTheme from "./theme";
 
 const Header = styled.header`
   text-align: center;
+`;
+
+const Title = styled.h1`
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding: 0;
+`;
+
+const Ted = styled.span`
+  color: ${({ theme }) => theme.colors.ted};
+  font-weight: 900;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+`;
+
+type ButtonProps = {
+  active: boolean;
+};
+const Button = styled.button<ButtonProps>`
+  background-color: ${({ active, theme }) =>
+    active ? theme.colors.ted : "white"};
+  color: ${({ active, theme }) => (active ? "white" : theme.colors.ted)};
+  font-weight: ${({ active }) => (active ? "900" : "700")};
+  padding: 0.5em 1em;
+  border: ${({ active, theme }) =>
+    active ? "none" : `2px solid ${theme.colors.ted}`};
+  cursor: ${({ active }) => (active ? "inherit" : "pointer")};
+  border-radius: 0.5rem;
+`;
+
+const Nav = styled.nav`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  @media only screen and (min-width: 520px) {
+    flex-direction: row;
+  }
+`;
+
+const Main = styled.main`
+  padding: 1rem;
 `;
 
 function App() {
@@ -34,22 +80,32 @@ function App() {
 
   return (
     <Router>
-      <Normalize />
-      <GlobalStyle />
-      <Header>
-        <h1>Best of Ted</h1>
-      </Header>
-      <main>
-        <nav>
-          {filters.map((filter) => (
-            <button key={filter} type="button">
-              {filter}
-            </button>
-          ))}
-        </nav>
-        <Route exact={true} path="/" component={ChannelsList} />
-        <Route path="/t/:videoId" component={Video} />
-      </main>
+      <ThemeProvider theme={defaultTheme}>
+        <Normalize />
+        <GlobalStyle />
+        <Header>
+          <Title>
+            Best of <Ted>Ted</Ted>
+          </Title>
+        </Header>
+        <Main>
+          <Nav>
+            {filters.map((filter) => (
+              <Button
+                active={filter === activeFilter}
+                disabled={filter === activeFilter}
+                key={filter}
+                onClick={() => dispatch(updateFilter(filter))}
+                type="button"
+              >
+                {filtersNames[filter]}
+              </Button>
+            ))}
+          </Nav>
+          <Route exact={true} path="/" component={ChannelsList} />
+          <Route path="/t/:videoId" component={Video} />
+        </Main>
+      </ThemeProvider>
     </Router>
   );
 }

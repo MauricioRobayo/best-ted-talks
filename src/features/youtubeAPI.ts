@@ -25,6 +25,7 @@ export type VideoResult = {
     channelId: string;
     thumbnails: {
       default: Thumbnail;
+      medium: Thumbnail;
     };
   };
   contentDetails: {
@@ -37,15 +38,25 @@ export const fetchYouTube = async (
   query: Record<string, string>
 ) => {
   const searchParams = new URLSearchParams(query);
+
   let baseUrl =
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:5001/best-ted-talks/us-central1/youtubeApi/"
       : "/youtube";
 
-  const result = await fetch(`${baseUrl}${endpoint}?${searchParams}`);
+  const url = `${baseUrl}${endpoint}?${searchParams}`;
+  const cache = JSON.parse(localStorage.getItem(url) || "{}");
+
+  if (cache.cached && cache.cached > Date.now() - 60 * 60 * 1000) {
+    return cache.data;
+  }
+
+  const result = await fetch(url);
   if (!result.ok) {
     throw new Error(result.statusText);
   }
 
-  return result.json();
+  const data = await result.json();
+  localStorage.setItem(url, JSON.stringify({ data, cached: Date.now() }));
+  return data;
 };
