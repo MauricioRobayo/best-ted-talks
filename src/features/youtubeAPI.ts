@@ -1,6 +1,3 @@
-const BASE_URL = "https://www.googleapis.com/youtube/v3";
-const API_KEY = "AIzaSyA0-OJjMtSqUqT_WgpOKf5bCyHIQUfQqDI";
-
 export type Thumbnail = {
   url: string;
   width: number;
@@ -39,11 +36,13 @@ export const fetchYouTube = async (
   endpoint: string,
   query: Record<string, string>
 ) => {
-  const searchParams = new URLSearchParams({
-    key: API_KEY,
-    ...query,
-  });
-  const result = await fetch(`${BASE_URL}/${endpoint}?${searchParams}`);
+  const searchParams = new URLSearchParams(query);
+  let baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:5001/best-ted-talks/us-central1/youtubeApi/"
+      : "/youtube";
+
+  const result = await fetch(`${baseUrl}${endpoint}?${searchParams}`);
   if (!result.ok) {
     throw new Error(result.statusText);
   }
