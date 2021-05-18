@@ -1,6 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-/.firebase
 
 # dependencies
 /node_modules
@@ -26,3 +25,5 @@ yarn-error.log*
 
 ui-debug.log
 firestore-debug.log
+firebase-debug.log
+.firebase
