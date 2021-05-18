@@ -45,7 +45,7 @@ const Footer = styled.footer`
 `;
 
 const Title = styled.h4`
-  margin: 0.5rem 0 0;
+  margin: 0.5rem 0 0.25rem;
   a {
     color: ${({ theme }) => theme.colors.main};
   }
@@ -57,7 +57,7 @@ const StyledVideoCard = styled.div`
 `;
 
 const Author = styled.div`
-  margin: 0.25rem 0 0.5rem;
+  margin: 0 0 0.5rem;
 `;
 
 type VideoCardProps = {
@@ -107,7 +107,8 @@ const VideoCard = ({
       <Title>
         <Link to={videoPath}>{talkTitle.trim()}</Link>
       </Title>
-      <Author>{talkSpeaker.trim()}</Author>
+      {talkSpeaker ? <Author>{talkSpeaker.trim()}</Author> : null}
+
       <Footer>
         <p>
           <FaRegCalendarAlt /> {publishedDate}
