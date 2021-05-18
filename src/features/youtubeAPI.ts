@@ -41,10 +41,10 @@ export const fetchYouTube = async (
 
   let baseUrl =
     process.env.NODE_ENV === "development"
-      ? "http://127.0.0.1:5001/best-ted-talks/us-central1/youtubeApi/"
+      ? "http://127.0.0.1:5001/best-ted-talks/us-central1/youtubeApi"
       : "/youtube";
 
-  const url = `${baseUrl}${endpoint}?${searchParams}`;
+  const url = `${baseUrl}/${endpoint}?${searchParams}`;
   const cache = JSON.parse(localStorage.getItem(url) || "{}");
 
   if (cache.cached && cache.cached > Date.now() - 60 * 60 * 1000) {
