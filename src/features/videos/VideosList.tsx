@@ -55,7 +55,7 @@ const VideosList = ({ channelId }: VideoListProps) => {
       ) : (
         <VideosWrapper>
           {channelVideos.map((video) => (
-            <StyledVideoCard key={video.id} {...video} />
+            <StyledVideoCard key={video.id} video={video} />
           ))}
         </VideosWrapper>
       )}
