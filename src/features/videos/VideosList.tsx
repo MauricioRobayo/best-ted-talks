@@ -43,7 +43,7 @@ const VideosList = ({ channelId }: VideoListProps) => {
 
   return (
     <VideoListWrapper>
-      {true || videosStatus === "loading" ? (
+      {videosStatus === "loading" ? (
         <StyledLoader
           type="Grid"
           color={defaultTheme.colors.ted}
