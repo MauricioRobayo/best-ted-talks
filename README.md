@@ -1,3 +1,3 @@
-# Best of Ted
+# Best TED Talks
 
-[Best Ted Talks](https://best-ted-talks.web.app)
+[Best TED Talks](https://best-ted-talks.web.app)
