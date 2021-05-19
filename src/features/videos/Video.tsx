@@ -20,6 +20,21 @@ const BackButton = styled.div`
 
 const IframeWrapper = styled.div`
   place-self: center;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  &::after {
+    padding-top: 56.25%;
+    display: block;
+    content: "";
+  }
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 interface MatchParams {
@@ -45,8 +60,6 @@ const Video = ({ match }: Props) => {
       </BackButton>
       <IframeWrapper>
         <iframe
-          width="560"
-          height="315"
           src={`https://www.youtube.com/embed/${videoId}`}
           title="YouTube video player"
           frameBorder="0"
