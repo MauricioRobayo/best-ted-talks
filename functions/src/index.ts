@@ -3,7 +3,10 @@ import axios from "axios";
 import * as crypto from "crypto";
 import * as admin from "firebase-admin";
 
-admin.initializeApp();
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+  databaseURL: "https://best-of-ted.firebaseio.com",
+});
 
 const db = admin.firestore();
 
@@ -38,11 +41,9 @@ export const youtubeApi = functions.https.onRequest(async (req, res) => {
       {
         headers: {
           referer: req.headers.referer,
-          origin: req.headers.origin,
         },
       }
     );
-
     doc.set({
       cached: Date.now(),
       data: response.data,
@@ -50,7 +51,9 @@ export const youtubeApi = functions.https.onRequest(async (req, res) => {
     });
     res.set("X-Cache-Status", "MISS").json(response.data);
   } catch (error) {
-    functions.logger.error(JSON.stringify(error));
+    functions.logger.error(
+      `youtubeApi function error: ${JSON.stringify(error)}`
+    );
     if (error.response) {
       const {status, statusText} = error.response;
       res.status(status).json({
