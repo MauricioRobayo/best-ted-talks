@@ -88,10 +88,6 @@ const VideoCard = ({
   const formattedDislikeCount = new Intl.NumberFormat().format(dislikeCount);
   const formattedCommentCount = new Intl.NumberFormat().format(commentCount);
   const formattedViewCount = new Intl.NumberFormat().format(viewCount);
-  console.log(
-    channelsMetaInfo[channelId].titleDivider,
-    title.split(channelsMetaInfo[channelId].titleDivider)
-  );
   const [talkTitle, talkSpeaker] = title.split(
     channelsMetaInfo[channelId].titleDivider
   );
