@@ -85,7 +85,7 @@ function App() {
         <GlobalStyle />
         <Header>
           <Title>
-            Best of <Ted>Ted</Ted>
+            Best <Ted>Ted</Ted> Talks
           </Title>
         </Header>
         <Main>

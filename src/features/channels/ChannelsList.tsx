@@ -5,20 +5,30 @@ import VideosList from "../videos/VideosList";
 import Channel from "./Channel";
 import { selectChannels, selectChannelsStatus } from "./channelsSlice";
 import defaultTheme from "../../theme";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const StyledLoader = styled(Loader)`
+  margin-top: 2rem;
+`;
 
 const ChannelsList = () => {
   const channels = useSelector(selectChannels);
   const channelsStatus = useSelector(selectChannelsStatus);
 
   return (
-    <div>
+    <Wrapper>
       {channelsStatus === "loading" ? (
-        <Loader
+        <StyledLoader
           type="Grid"
           color={defaultTheme.colors.ted}
           height={100}
           width={100}
-          timeout={3000} //3 secs
         />
       ) : (
         channels.map((channel) => (
@@ -27,7 +37,7 @@ const ChannelsList = () => {
           </Channel>
         ))
       )}
-    </div>
+    </Wrapper>
   );
 };
 
