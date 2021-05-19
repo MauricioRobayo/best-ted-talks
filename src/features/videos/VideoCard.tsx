@@ -4,7 +4,7 @@ import { FiThumbsUp, FiThumbsDown, FiEye } from "react-icons/fi";
 import { FaRegCommentDots, FaRegCalendarAlt } from "react-icons/fa";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled from "styled-components/macro";
 import { channelsMetaInfo } from "../../config";
 
 const Thumbnail = styled.div`

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
-import styled from "styled-components";
+import styled from "styled-components/macro";
 import defaultTheme from "../../theme";
 import VideoCard from "./VideoCard";
 import { selectVideos, selectVideosStatus } from "./videosSlice";
@@ -25,7 +25,14 @@ type VideoListProps = {
   channelId: string;
 };
 
-const VideoListWrapper = styled.div``;
+const VideoListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledLoader = styled(Loader)`
+  align-self: center;
+`;
 
 const VideosList = ({ channelId }: VideoListProps) => {
   const videos = useSelector(selectVideos);
@@ -39,12 +46,11 @@ const VideosList = ({ channelId }: VideoListProps) => {
   return (
     <VideoListWrapper>
       {videosStatus === "loading" ? (
-        <Loader
+        <StyledLoader
           type="Grid"
           color={defaultTheme.colors.ted}
           height={100}
           width={100}
-          timeout={3000}
         />
       ) : (
         <VideosWrapper>

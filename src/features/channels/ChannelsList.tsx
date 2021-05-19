@@ -5,16 +5,17 @@ import VideosList from "../videos/VideosList";
 import Channel from "./Channel";
 import { selectChannels, selectChannelsStatus } from "./channelsSlice";
 import defaultTheme from "../../theme";
-import styled from "styled-components";
+import styled from "styled-components/macro";
 
 const Wrapper = styled.div`
   display: flex;
-  align-items: center;
   flex-direction: column;
 `;
 
 const StyledLoader = styled(Loader)`
   margin-top: 2rem;
+  margin-bottom: 2rem;
+  align-self: center;
 `;
 
 const ChannelsList = () => {

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import styled from "styled-components";
+import styled from "styled-components/macro";
 import { Normalize } from "styled-normalize";
 import { channelsIds } from "./config";
 import ChannelsList from "./features/channels/ChannelsList";
