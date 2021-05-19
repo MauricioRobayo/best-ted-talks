@@ -30,9 +30,7 @@ const VideoListWrapper = styled.div`
   flex-direction: column;
 `;
 
-const StyledLoader = styled(Loader)`
-  align-self: center;
-`;
+const StyledLoader = styled(Loader)``;
 
 const VideosList = ({ channelId }: VideoListProps) => {
   const videos = useSelector(selectVideos);
@@ -45,7 +43,7 @@ const VideosList = ({ channelId }: VideoListProps) => {
 
   return (
     <VideoListWrapper>
-      {videosStatus === "loading" ? (
+      {true || videosStatus === "loading" ? (
         <StyledLoader
           type="Grid"
           color={defaultTheme.colors.ted}
