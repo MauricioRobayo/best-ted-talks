@@ -3,8 +3,8 @@ import { RootState } from "../../app/store";
 
 export const filters = ["viewCount", "rating", "date"] as const;
 export const filtersNames = {
+  rating: "Trending now",
   viewCount: "Most viewed",
-  rating: "Best rated",
   date: "Most recent",
 };
 export type FilterType = typeof filters[number];
@@ -15,7 +15,7 @@ export type IInitialState = {
 };
 
 const initialState: IInitialState = {
-  activeFilter: "viewCount",
+  activeFilter: "rating",
   filters,
 };
 
