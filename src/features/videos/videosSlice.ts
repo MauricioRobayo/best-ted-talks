@@ -38,7 +38,7 @@ export const fetchVideos = createAsyncThunk<
 >("videos/fetchVideos", async ({ order, channelsIds }) => {
   const channelsVideos = await Promise.all(
     channelsIds.map((channelId) =>
-      fetchTedTopVideos({ order, channelId, maxResults: 10 })
+      fetchTedTopVideos({ order, channelId, maxResults: 20 })
     )
   );
 
