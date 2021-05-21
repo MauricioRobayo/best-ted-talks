@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
-export const filters = ["viewCount", "rating", "date"] as const;
+export const filters = ["rating", "viewCount", "date"] as const;
 export const filtersNames = {
-  rating: "Trending now",
+  rating: "Best rated",
   viewCount: "Most viewed",
   date: "Most recent",
 };
