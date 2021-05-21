@@ -16,12 +16,13 @@ import {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const StyledLoader = styled(Loader)`
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin: auto;
   align-self: center;
+  justify-self: center;
 `;
 
 type ButtonProps = {

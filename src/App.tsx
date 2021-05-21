@@ -39,6 +39,8 @@ const Ted = styled.span`
 
 const Main = styled.main`
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
   flex: 1;
 `;
 
