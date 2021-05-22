@@ -5,17 +5,20 @@ import themes from "../theme";
 type AppLoaderProps = {
   width: number;
   height: number;
+  className?: string;
 };
 
-const AppLoader = ({ width, height }: AppLoaderProps) => {
+const AppLoader = ({ width, height, className }: AppLoaderProps) => {
   const preferredColorScheme = usePrefersColorScheme();
   return (
-    <Loader
-      type="Puff"
-      color={themes[preferredColorScheme].colors.ted}
-      width={width}
-      height={height}
-    />
+    <div className={className}>
+      <Loader
+        type="Puff"
+        color={themes[preferredColorScheme].colors.ted}
+        width={width}
+        height={height}
+      />
+    </div>
   );
 };
 

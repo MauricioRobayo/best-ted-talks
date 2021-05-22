@@ -5,11 +5,11 @@ import Channel from "./Channel";
 import { selectChannels, selectChannelsStatus } from "./channelsSlice";
 import styled from "styled-components/macro";
 import Filters from "../filters/Filters";
-import { useDispatch, useSelector } from "react-redux";
 import { channelsIds } from "../../config";
 import { fetchChannels } from "./channelsSlice";
 import { selectActiveFilter } from "../../features/filters/filtersSlice";
 import { fetchVideos } from "../../features/videos/videosSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,11 +34,11 @@ const Nav = styled.nav`
 `;
 
 const ChannelsList = () => {
-  const channels = useSelector(selectChannels);
-  const channelsStatus = useSelector(selectChannelsStatus);
+  const channels = useAppSelector(selectChannels);
+  const channelsStatus = useAppSelector(selectChannelsStatus);
 
-  const dispatch = useDispatch();
-  const activeFilter = useSelector(selectActiveFilter);
+  const dispatch = useAppDispatch();
+  const activeFilter = useAppSelector(selectActiveFilter);
   useEffect(() => {
     dispatch(fetchVideos({ order: activeFilter, channelsIds }));
   }, [dispatch, activeFilter]);
