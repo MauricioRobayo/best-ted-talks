@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { Normalize } from "styled-normalize";
 import { channelsIds } from "./config";
@@ -11,7 +11,7 @@ import { selectActiveFilter } from "./features/filters/filtersSlice";
 import Video from "./features/videos/Video";
 import { fetchVideos } from "./features/videos/videosSlice";
 import GlobalStyle from "./globalStyles";
-import { ThemeProvider } from "styled-components";
+import { css, ThemeProvider } from "styled-components";
 import themes from "./theme";
 import usePrefersColorScheme from "./hooks/usePrefersColorScheme";
 
@@ -38,11 +38,18 @@ const Ted = styled.span`
   text-transform: uppercase;
 `;
 
-const Main = styled.main`
+type MainProps = {
+  home: boolean;
+};
+const Main = styled.main<MainProps>`
   padding: 1rem;
-  display: flex;
-  flex-direction: column;
   flex: 1;
+  ${({ home }) =>
+    home &&
+    css`
+      display: flex;
+      flex-direction: column;
+    `}
 `;
 
 const Footer = styled.footer`
@@ -53,6 +60,7 @@ const Footer = styled.footer`
 function App() {
   const dispatch = useDispatch();
   const activeFilter = useSelector(selectActiveFilter);
+  const location = useLocation();
 
   const preferredColorScheme = usePrefersColorScheme();
 
@@ -65,29 +73,25 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Router>
-      <ThemeProvider theme={themes[preferredColorScheme]}>
-        <Normalize />
-        <GlobalStyle />
-        <Wrapper>
-          <Header>
-            <Title>
-              Best <Ted>Ted</Ted> Talks
-            </Title>
-          </Header>
-          <Main>
-            <Route exact={true} path="/" component={ChannelsList} />
-            <Route path="/t/:videoId" component={Video} />
-          </Main>
-          <Footer>
-            View on{" "}
-            <a href="https://github.com/MauricioRobayo/best-ted-talks">
-              Github.
-            </a>
-          </Footer>
-        </Wrapper>
-      </ThemeProvider>
-    </Router>
+    <ThemeProvider theme={themes[preferredColorScheme]}>
+      <Normalize />
+      <GlobalStyle />
+      <Wrapper>
+        <Header>
+          <Title>
+            Best <Ted>Ted</Ted> Talks
+          </Title>
+        </Header>
+        <Main home={location.pathname === "/"}>
+          <Route exact={true} path="/" component={ChannelsList} />
+          <Route path="/t/:videoId" component={Video} />
+        </Main>
+        <Footer>
+          View on{" "}
+          <a href="https://github.com/MauricioRobayo/best-ted-talks">Github.</a>
+        </Footer>
+      </Wrapper>
+    </ThemeProvider>
   );
 }
 
