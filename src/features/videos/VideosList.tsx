@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import AppLoader from "../../components/AppLoader";
-import { useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import VideoCard from "./VideoCard";
 import { selectVideos, selectVideosStatus } from "./videosSlice";
+import { useAppSelector } from "../../app/hooks";
 
 const VideosWrapper = styled.div`
   padding-bottom: 1rem;
@@ -32,8 +32,8 @@ const VideoListWrapper = styled.div`
 const StyledLoader = styled(AppLoader)``;
 
 const VideosList = ({ channelId }: VideoListProps) => {
-  const videos = useSelector(selectVideos);
-  const videosStatus = useSelector(selectVideosStatus);
+  const videos = useAppSelector(selectVideos);
+  const videosStatus = useAppSelector(selectVideosStatus);
 
   const channelVideos = useMemo(
     () => videos.filter((video) => video.channelId === channelId),

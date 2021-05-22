@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { RootState } from "../../app/store";
 import VideoDescription from "./VideoDescription";
 import { fetchVideo, selectVideoById } from "./videosSlice";
 import AppLoader from "../../components/AppLoader";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 const Wrapper = styled.div`
   display: grid;
@@ -46,10 +45,8 @@ interface Props extends RouteComponentProps<MatchParams> {}
 
 const Video = ({ match }: Props) => {
   const { videoId } = match.params;
-  const video = useSelector((state: RootState) =>
-    selectVideoById(state, videoId)
-  );
-  const dispatch = useDispatch();
+  const video = useAppSelector((state) => selectVideoById(state, videoId));
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!video) {

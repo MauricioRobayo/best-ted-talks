@@ -1,6 +1,6 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   filtersNames,
   selectActiveFilter,
@@ -23,9 +23,9 @@ const Button = styled.button<ButtonProps>`
 `;
 
 const Filters = () => {
-  const filters = useSelector(selectFilters);
-  const activeFilter = useSelector(selectActiveFilter);
-  const dispatch = useDispatch();
+  const filters = useAppSelector(selectFilters);
+  const activeFilter = useAppSelector(selectActiveFilter);
+  const dispatch = useAppDispatch();
 
   return (
     <>
