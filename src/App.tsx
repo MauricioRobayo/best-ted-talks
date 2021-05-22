@@ -1,15 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { useDispatch, useSelector } from "react-redux";
 import { Route, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { Normalize } from "styled-normalize";
-import { channelsIds } from "./config";
 import ChannelsList from "./features/channels/ChannelsList";
-import { fetchChannels } from "./features/channels/channelsSlice";
-import { selectActiveFilter } from "./features/filters/filtersSlice";
 import Video from "./features/videos/Video";
-import { fetchVideos } from "./features/videos/videosSlice";
 import GlobalStyle from "./globalStyles";
 import { css, ThemeProvider } from "styled-components";
 import themes from "./theme";
@@ -58,19 +53,9 @@ const Footer = styled.footer`
 `;
 
 function App() {
-  const dispatch = useDispatch();
-  const activeFilter = useSelector(selectActiveFilter);
   const location = useLocation();
 
   const preferredColorScheme = usePrefersColorScheme();
-
-  useEffect(() => {
-    dispatch(fetchVideos({ order: activeFilter, channelsIds }));
-  }, [dispatch, activeFilter]);
-
-  useEffect(() => {
-    dispatch(fetchChannels(channelsIds));
-  }, [dispatch]);
 
   return (
     <ThemeProvider theme={themes[preferredColorScheme]}>
