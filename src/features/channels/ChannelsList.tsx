@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
-import Loader from "react-loader-spinner";
+import AppLoader from "../../components/AppLoader";
 import VideosList from "../videos/VideosList";
 import Channel from "./Channel";
 import { selectChannels, selectChannelsStatus } from "./channelsSlice";
-import themes from "../../theme";
 import styled from "styled-components/macro";
-import usePrefersColorScheme from "../../hooks/usePrefersColorScheme";
 import Filters from "../filters/Filters";
 import { useDispatch, useSelector } from "react-redux";
 import { channelsIds } from "../../config";
@@ -19,7 +17,7 @@ const Wrapper = styled.div`
   flex: 1;
 `;
 
-const StyledLoader = styled(Loader)`
+const StyledLoader = styled(AppLoader)`
   margin: auto;
   align-self: center;
   justify-self: center;
@@ -38,7 +36,6 @@ const Nav = styled.nav`
 const ChannelsList = () => {
   const channels = useSelector(selectChannels);
   const channelsStatus = useSelector(selectChannelsStatus);
-  const preferredColorScheme = usePrefersColorScheme();
 
   const dispatch = useDispatch();
   const activeFilter = useSelector(selectActiveFilter);
@@ -57,12 +54,7 @@ const ChannelsList = () => {
       </Nav>
       <Wrapper>
         {channelsStatus === "loading" ? (
-          <StyledLoader
-            type="Grid"
-            color={themes[preferredColorScheme].colors.ted}
-            height={100}
-            width={100}
-          />
+          <StyledLoader height={100} width={100} />
         ) : (
           channels.map((channel) => (
             <Channel key={channel.id} {...channel}>

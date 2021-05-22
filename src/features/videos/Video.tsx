@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { RootState } from "../../app/store";
 import VideoDescription from "./VideoDescription";
 import { fetchVideo, selectVideoById } from "./videosSlice";
+import AppLoader from "../../components/AppLoader";
 
 const Wrapper = styled.div`
   display: grid;
@@ -70,7 +71,11 @@ const Video = ({ match }: Props) => {
           allowFullScreen
         ></iframe>
       </IframeWrapper>
-      {video ? <VideoDescription video={video} /> : "Loading info..."}
+      {video ? (
+        <VideoDescription video={video} />
+      ) : (
+        <AppLoader height={50} width={50} />
+      )}
     </Wrapper>
   );
 };

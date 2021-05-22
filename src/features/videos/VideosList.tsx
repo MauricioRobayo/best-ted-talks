@@ -1,9 +1,7 @@
 import React, { useMemo } from "react";
-import Loader from "react-loader-spinner";
+import AppLoader from "../../components/AppLoader";
 import { useSelector } from "react-redux";
 import styled from "styled-components/macro";
-import themes from "../../theme";
-import usePrefersColorScheme from "../../hooks/usePrefersColorScheme";
 import VideoCard from "./VideoCard";
 import { selectVideos, selectVideosStatus } from "./videosSlice";
 
@@ -31,12 +29,11 @@ const VideoListWrapper = styled.div`
   flex-direction: column;
 `;
 
-const StyledLoader = styled(Loader)``;
+const StyledLoader = styled(AppLoader)``;
 
 const VideosList = ({ channelId }: VideoListProps) => {
   const videos = useSelector(selectVideos);
   const videosStatus = useSelector(selectVideosStatus);
-  const preferredColorScheme = usePrefersColorScheme();
 
   const channelVideos = useMemo(
     () => videos.filter((video) => video.channelId === channelId),
@@ -46,12 +43,7 @@ const VideosList = ({ channelId }: VideoListProps) => {
   return (
     <VideoListWrapper>
       {videosStatus === "loading" ? (
-        <StyledLoader
-          type="Grid"
-          color={themes[preferredColorScheme].colors.ted}
-          height={100}
-          width={100}
-        />
+        <StyledLoader height={100} width={100} />
       ) : (
         <VideosWrapper>
           {channelVideos.map((video) => (
