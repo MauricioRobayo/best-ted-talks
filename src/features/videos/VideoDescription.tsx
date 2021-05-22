@@ -56,7 +56,7 @@ const VideoDescription = ({ video }: VideoDescriptionProps) => {
   const formattedCommentCount = new Intl.NumberFormat().format(commentCount);
   const formattedViewCount = new Intl.NumberFormat().format(viewCount);
   const [talkTitle, talkSpeaker] = title.split(
-    channelsMetaInfo[channelId].titleDivider
+    channelsMetaInfo[channelId]?.titleDivider
   );
   const videoPath = `/t/${id}`;
 

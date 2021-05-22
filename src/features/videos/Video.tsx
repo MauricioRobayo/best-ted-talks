@@ -1,11 +1,11 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { RootState } from "../../app/store";
 import VideoDescription from "./VideoDescription";
-import { selectVideoById } from "./videosSlice";
+import { fetchVideo, selectVideoById } from "./videosSlice";
 
 const Wrapper = styled.div`
   display: grid;
@@ -48,10 +48,13 @@ const Video = ({ match }: Props) => {
   const video = useSelector((state: RootState) =>
     selectVideoById(state, videoId)
   );
+  const dispatch = useDispatch();
 
-  if (!video) {
-    return null;
-  }
+  useEffect(() => {
+    if (!video) {
+      dispatch(fetchVideo(videoId));
+    }
+  }, [video, videoId, dispatch]);
 
   return (
     <Wrapper>
@@ -67,7 +70,7 @@ const Video = ({ match }: Props) => {
           allowFullScreen
         ></iframe>
       </IframeWrapper>
-      <VideoDescription video={video} />
+      {video ? <VideoDescription video={video} /> : "Loading info..."}
     </Wrapper>
   );
 };

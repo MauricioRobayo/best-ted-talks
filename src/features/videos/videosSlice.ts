@@ -7,7 +7,7 @@ import { htmlUnescape } from "escape-goat";
 import { RootState } from "../../app/store";
 import { FilterType } from "../filters/filtersSlice";
 import { fetchTedTopVideos, fetchVideoInfo } from "./videosAPI";
-import { Thumbnail } from "../youtubeAPI";
+import { Thumbnail, VideoResult } from "../youtubeAPI";
 
 export interface IVideo {
   commentCount: number;
@@ -28,6 +28,16 @@ interface IInitialState {
 }
 
 const videosAdapter = createEntityAdapter<IVideo>({});
+
+export const fetchVideo = createAsyncThunk(
+  "videos/fetchVideo",
+  async (id: string) => {
+    const {
+      items: [videoInfo],
+    } = await fetchVideoInfo([id]);
+    return makeVideoItem(videoInfo);
+  }
+);
 
 export const fetchVideos = createAsyncThunk<
   IVideo[],
@@ -65,27 +75,30 @@ export const fetchVideos = createAsyncThunk<
     idsBatches.map((ids) => fetchVideoInfo(ids))
   );
   return videosInfoInBatches
-    .map((videosInfoInBatch) =>
-      videosInfoInBatch.items.map(
-        ({ id, snippet, statistics, contentDetails }) => {
-          return {
-            id,
-            title: htmlUnescape(snippet.title),
-            channelId: snippet.channelId,
-            description: snippet.description,
-            thumbnail: snippet.thumbnails.medium,
-            publishedAt: snippet.publishedAt,
-            viewCount: Number(statistics.viewCount),
-            likeCount: Number(statistics.likeCount),
-            dislikeCount: Number(statistics.dislikeCount),
-            commentCount: Number(statistics.commentCount),
-            duration: contentDetails.duration,
-          };
-        }
-      )
-    )
+    .map((videosInfoInBatch) => videosInfoInBatch.items.map(makeVideoItem))
     .flat();
 });
+
+const makeVideoItem = ({
+  id,
+  snippet,
+  statistics,
+  contentDetails,
+}: VideoResult) => {
+  return {
+    id,
+    title: htmlUnescape(snippet.title),
+    channelId: snippet.channelId,
+    description: snippet.description,
+    thumbnail: snippet.thumbnails.medium,
+    publishedAt: snippet.publishedAt,
+    viewCount: Number(statistics.viewCount),
+    likeCount: Number(statistics.likeCount),
+    dislikeCount: Number(statistics.dislikeCount),
+    commentCount: Number(statistics.commentCount),
+    duration: contentDetails.duration,
+  };
+};
 
 export const videosSlice = createSlice({
   name: "videos",
@@ -104,6 +117,13 @@ export const videosSlice = createSlice({
       })
       .addCase(fetchVideos.fulfilled, (state, action) => {
         videosAdapter.setAll(state, action.payload);
+        state.status = "idle";
+      })
+      .addCase(fetchVideo.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchVideo.fulfilled, (state, action) => {
+        videosAdapter.addOne(state, action.payload);
         state.status = "idle";
       });
   },
