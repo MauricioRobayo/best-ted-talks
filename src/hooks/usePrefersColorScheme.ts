@@ -7,9 +7,14 @@ const usePrefersColorScheme = () => {
     darkModeQuery.matches ? "dark" : "light"
   );
   useEffect(() => {
-    darkModeQuery.addEventListener("change", (event) => {
+    const updateColorScheme = (event: MediaQueryListEvent) => {
       setColorScheme(event.matches ? "dark" : "light");
-    });
+    };
+    darkModeQuery.addEventListener("change", updateColorScheme);
+
+    return () => {
+      darkModeQuery.removeEventListener("change", updateColorScheme);
+    };
   }, []);
 
   return colorScheme;
