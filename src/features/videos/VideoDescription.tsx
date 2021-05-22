@@ -9,7 +9,7 @@ import styled from "styled-components/macro";
 
 const Footer = styled.footer`
   font-size: 0.75rem;
-  color: #666;
+  color: ${({ theme }) => theme.colors.secondary};
   display: flex;
   flex-direction: column;
   gap: 0.5em;

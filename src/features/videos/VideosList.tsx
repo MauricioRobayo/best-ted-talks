@@ -2,7 +2,8 @@ import React, { useMemo } from "react";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import styled from "styled-components/macro";
-import defaultTheme from "../../theme";
+import themes from "../../theme";
+import usePrefersColorScheme from "../../hooks/usePrefersColorScheme";
 import VideoCard from "./VideoCard";
 import { selectVideos, selectVideosStatus } from "./videosSlice";
 
@@ -35,6 +36,7 @@ const StyledLoader = styled(Loader)``;
 const VideosList = ({ channelId }: VideoListProps) => {
   const videos = useSelector(selectVideos);
   const videosStatus = useSelector(selectVideosStatus);
+  const preferredColorScheme = usePrefersColorScheme();
 
   const channelVideos = useMemo(
     () => videos.filter((video) => video.channelId === channelId),
@@ -46,7 +48,7 @@ const VideosList = ({ channelId }: VideoListProps) => {
       {videosStatus === "loading" ? (
         <StyledLoader
           type="Grid"
-          color={defaultTheme.colors.ted}
+          color={themes[preferredColorScheme].colors.ted}
           height={100}
           width={100}
         />

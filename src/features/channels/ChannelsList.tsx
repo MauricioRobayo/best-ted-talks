@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import VideosList from "../videos/VideosList";
 import Channel from "./Channel";
 import { selectChannels, selectChannelsStatus } from "./channelsSlice";
-import defaultTheme from "../../theme";
+import themes from "../../theme";
 import styled from "styled-components/macro";
 import {
   filtersNames,
@@ -12,6 +12,7 @@ import {
   selectFilters,
   updateFilter,
 } from "../../features/filters/filtersSlice";
+import usePrefersColorScheme from "../../hooks/usePrefersColorScheme";
 
 const Wrapper = styled.div`
   display: flex;
@@ -30,12 +31,11 @@ type ButtonProps = {
 };
 const Button = styled.button<ButtonProps>`
   background-color: ${({ active, theme }) =>
-    active ? theme.colors.ted : "white"};
+    active ? theme.colors.ted : theme.colors.background};
   color: ${({ active, theme }) => (active ? "white" : theme.colors.ted)};
   font-weight: ${({ active }) => (active ? "900" : "700")};
   padding: 0.5em 1em;
-  border: ${({ active, theme }) =>
-    active ? "none" : `2px solid ${theme.colors.ted}`};
+  border: ${({ theme }) => `2px solid ${theme.colors.ted}`};
   cursor: ${({ active }) => (active ? "inherit" : "pointer")};
   border-radius: 0.5rem;
 `;
@@ -55,6 +55,7 @@ const ChannelsList = () => {
   const channelsStatus = useSelector(selectChannelsStatus);
   const filters = useSelector(selectFilters);
   const activeFilter = useSelector(selectActiveFilter);
+  const preferredColorScheme = usePrefersColorScheme();
   const dispatch = useDispatch();
 
   return (
@@ -76,7 +77,7 @@ const ChannelsList = () => {
         {channelsStatus === "loading" ? (
           <StyledLoader
             type="Grid"
-            color={defaultTheme.colors.ted}
+            color={themes[preferredColorScheme].colors.ted}
             height={100}
             width={100}
           />

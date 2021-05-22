@@ -12,7 +12,8 @@ import Video from "./features/videos/Video";
 import { fetchVideos } from "./features/videos/videosSlice";
 import GlobalStyle from "./globalStyles";
 import { ThemeProvider } from "styled-components";
-import defaultTheme from "./theme";
+import themes from "./theme";
+import usePrefersColorScheme from "./hooks/usePrefersColorScheme";
 
 const Header = styled.header`
   text-align: center;
@@ -53,6 +54,8 @@ function App() {
   const dispatch = useDispatch();
   const activeFilter = useSelector(selectActiveFilter);
 
+  const preferredColorScheme = usePrefersColorScheme();
+
   useEffect(() => {
     dispatch(fetchVideos({ order: activeFilter, channelsIds }));
   }, [dispatch, activeFilter]);
@@ -63,7 +66,7 @@ function App() {
 
   return (
     <Router>
-      <ThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={themes[preferredColorScheme]}>
         <Normalize />
         <GlobalStyle />
         <Wrapper>
