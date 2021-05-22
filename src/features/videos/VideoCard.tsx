@@ -46,7 +46,7 @@ const VideoCard = ({ className, video }: VideoCardProps) => {
     <StyledVideoCard className={className}>
       <Thumbnail>
         <Link to={videoPath}>
-          <img alt={title} src={thumbnail.url} title={title} />
+          <img alt={title} src={thumbnail.url} title={title} loading="lazy" />
         </Link>
         <Duration>{formattedDuration}</Duration>
       </Thumbnail>
