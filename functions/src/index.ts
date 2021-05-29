@@ -3,65 +3,59 @@ import axios from "axios";
 import * as crypto from "crypto";
 import * as admin from "firebase-admin";
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
+const firebaseConfig = {
+  apiKey: "AIzaSyBxs9D6Bk25Rh6W5Rfb70GbaQAmwiNgEag",
+  authDomain: "best-ted-talks.firebaseapp.com",
+  projectId: "best-ted-talks",
+  storageBucket: "best-ted-talks.appspot.com",
+  messagingSenderId: "243738979789",
+  appId: "1:243738979789:web:6cfec25cfdf68adb856884",
   databaseURL: "https://best-of-ted.firebaseio.com",
-});
+};
+
+admin.initializeApp(firebaseConfig);
 
 const db = admin.firestore();
 
 const baseUrl = "https://www.googleapis.com/youtube/v3";
 const youtubeApiKey = functions.config().youtube?.key;
-const localPath = "youtube";
 
 if (!youtubeApiKey) {
   throw new Error("No youtube api key found!");
 }
 
-export const youtubeApi = functions.https.onRequest(async (req, res) => {
-  res.set("Cache-Control", "public, max-age=3600, s-maxage=3600");
-  if (process.env.FUNCTIONS_EMULATOR) {
-    res.set("Access-Control-Allow-Origin", "http://localhost:3000");
-  }
+export const youtubeApi = functions.https.onCall(
+  async (
+    {endpoint, query}: {endpoint: string; query: Record<string, string>},
+    context
+  ) => {
+    if (context.app == undefined) {
+      throw new functions.https.HttpsError(
+        "failed-precondition",
+        "The function must be called from an App Check verified app."
+      );
+    }
 
-  try {
-    const originalUrl = req.originalUrl.replace(`/${localPath}`, "");
-
-    const hash = crypto.createHash("md5").update(originalUrl).digest("hex");
+    const searchParams = new URLSearchParams({...query, key: youtubeApiKey});
+    const url = `${baseUrl}/${endpoint}?${searchParams}`;
+    const hash = crypto.createHash("md5").update(url).digest("hex");
     const doc = db.collection("cache").doc(hash);
     const cache = await doc.get();
-    const data = cache.data();
+    const cachedData = cache.data();
 
-    if (data && data.cached > Date.now() - 60 * 60 * 1000) {
-      res.set("X-Cache-Status", "HIT").json(data.data);
-      return;
+    if (cachedData && cachedData.cached > Date.now() - 60 * 60 * 1000) {
+      return cachedData.data;
     }
-    const response = await axios.get(
-      `${baseUrl}${originalUrl}&key=${youtubeApiKey}`,
-      {
-        headers: {
-          referer: req.headers.referer,
-        },
-      }
-    );
+    const {data} = await axios.get(url, {
+      headers: {
+        referer: context.rawRequest.headers.origin,
+      },
+    });
     doc.set({
       cached: Date.now(),
-      data: response.data,
-      originalUrl,
+      data,
+      url,
     });
-    res.set("X-Cache-Status", "MISS").json(response.data);
-  } catch (error) {
-    functions.logger.error(
-      `youtubeApi function error: ${JSON.stringify(error)}`
-    );
-    if (error.response) {
-      const {status, statusText} = error.response;
-      res.status(status).json({
-        status,
-        statusText,
-      });
-      return;
-    }
-    res.status(500).json(error);
+    return data.data;
   }
-});
+);
