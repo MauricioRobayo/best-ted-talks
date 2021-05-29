@@ -29,12 +29,12 @@ export const youtubeApi = functions.https.onCall(
     {endpoint, query}: {endpoint: string; query: Record<string, string>},
     context
   ) => {
-    if (context.app == undefined) {
-      throw new functions.https.HttpsError(
-        "failed-precondition",
-        "The function must be called from an App Check verified app."
-      );
-    }
+    // if (context.app === undefined) {
+    //   throw new functions.https.HttpsError(
+    //     "failed-precondition",
+    //     "The function must be called from an App Check verified app."
+    //   );
+    // }
 
     const searchParams = new URLSearchParams({...query, key: youtubeApiKey});
     const url = `${baseUrl}/${endpoint}?${searchParams}`;
@@ -56,6 +56,6 @@ export const youtubeApi = functions.https.onCall(
       data,
       url,
     });
-    return data.data;
+    return data;
   }
 );
