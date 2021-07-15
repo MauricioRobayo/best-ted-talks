@@ -3,7 +3,17 @@ import axios from "axios";
 import * as crypto from "crypto";
 import * as admin from "firebase-admin";
 
-admin.initializeApp();
+const firebaseConfig = {
+  apiKey: "AIzaSyBxs9D6Bk25Rh6W5Rfb70GbaQAmwiNgEag",
+  authDomain: "best-ted-talks.firebaseapp.com",
+  projectId: "best-ted-talks",
+  storageBucket: "best-ted-talks.appspot.com",
+  messagingSenderId: "243738979789",
+  appId: "1:243738979789:web:6cfec25cfdf68adb856884",
+  databaseURL: "https://best-of-ted.firebaseio.com",
+};
+
+admin.initializeApp(firebaseConfig);
 
 const db = admin.firestore();
 
