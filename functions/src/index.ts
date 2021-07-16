@@ -3,17 +3,7 @@ import axios from "axios";
 import * as crypto from "crypto";
 import * as admin from "firebase-admin";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBxs9D6Bk25Rh6W5Rfb70GbaQAmwiNgEag",
-  authDomain: "best-ted-talks.firebaseapp.com",
-  projectId: "best-ted-talks",
-  storageBucket: "best-ted-talks.appspot.com",
-  messagingSenderId: "243738979789",
-  appId: "1:243738979789:web:6cfec25cfdf68adb856884",
-  databaseURL: "https://best-of-ted.firebaseio.com",
-};
-
-admin.initializeApp(firebaseConfig);
+admin.initializeApp();
 
 const db = admin.firestore();
 
@@ -29,13 +19,6 @@ export const youtubeApi = functions.https.onCall(
     {endpoint, query}: {endpoint: string; query: Record<string, string>},
     context
   ) => {
-    // if (context.app === undefined) {
-    //   throw new functions.https.HttpsError(
-    //     "failed-precondition",
-    //     "The function must be called from an App Check verified app."
-    //   );
-    // }
-
     const searchParams = new URLSearchParams({...query, key: youtubeApiKey});
     const url = `${baseUrl}/${endpoint}?${searchParams}`;
     const hash = crypto.createHash("md5").update(url).digest("hex");
